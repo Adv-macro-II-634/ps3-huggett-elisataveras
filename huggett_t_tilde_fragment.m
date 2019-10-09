@@ -47,6 +47,7 @@ while abs(aggsav) >= 0.01 ;
     % KEEP DECSISION RULE
     pol_fn = a(pol_indx);
     
+ 
     % SET UP INITITAL DISTRIBUTION
 
     
@@ -57,7 +58,7 @@ while abs(aggsav) >= 0.01 ;
     for ii = 1:length(emp_ind)
         apr_ind = pol_indx(emp_ind(ii), a_ind(ii)); % which a prime does the policy fn prescribe?
         MuNew(:, apr_ind) = MuNew(:, apr_ind) + ... % which mass of households goes to which exogenous state?
-            (PI(emp_ind(ii), :) .* mass)';
+            (PI(emp_ind(ii), :) * mass)';
     end
  
         
