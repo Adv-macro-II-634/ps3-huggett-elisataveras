@@ -130,8 +130,8 @@ legend({'Equality line','Lorenz Curve'},'Location','southeast')
 %extra credit 
 
 % calculate expected util
-ce=PI(1,1)/PI(1,2);
-cu=PI(2,1)/PI(2,2);
+ce=PI(1,1)*1+ PI(1,2)*b;
+cu=PI(2,1)*1+ PI(2,2)*b;
 retE = (ce .^ (1-sigma)) ./ (1 - sigma);
 retU = (cu .^ (1-sigma)) ./ (1 - sigma);
 WE=(retE*(1/(1-beta)));
@@ -142,13 +142,23 @@ WU=(retU*(1/(1-beta)));
         WU*ones(1,num_a)];
     
 % need to find value function value for each chosen asset:
- [emp_indVF, a_indVF] = find(vfn > WFB); % find non-zero indices
 
+vf_chosen=vfn(pol_indx);
 
+%find the index of those that has higher value function given their policy
+%function
+ [emp_indVF, a_indVF] = find(WFB>vf_chosen); % find non-zero indices
+ 
+  distInc = zeros(size(Mu)); 
+      for ii = 1:length(emp_indVF)
+         distInc(ii) = Mu(emp_indVF(ii), a_indVF(ii));
+      end   
+    %percentage of population taht are done better
+    sum(distInc(:))
  
 % calculate lambda:
 
-lambda=(WFB./vfn).^(1/1-sigma)-1;
+lambda=(WFB./vf_chosen).^(1/1-sigma)-1;
 
  Welfaregain=sum(sum(Mu.*lambda));
 
