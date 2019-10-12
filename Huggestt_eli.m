@@ -136,12 +136,20 @@ retE = (ce .^ (1-sigma)) ./ (1 - sigma);
 retU = (cu .^ (1-sigma)) ./ (1 - sigma);
 WE=(retE*(1/(1-beta)));
 WU=(retU*(1/(1-beta)));
-% need to find value function value for each chosen asset:
- [emp_indVFE, a_indVFE] = find(vfn(1,:) > WE); % find non-zero indices
- [emp_indVFU, a_indVFU] = find(vfn(2,:) > WU); % find non-zero indices
  
-value_fn_distrubtion=Mu.*vfn;
+ %create matrix with WE and WU
+ WFB=[WE*ones(1,num_a);
+        WU*ones(1,num_a)];
+    
+% need to find value function value for each chosen asset:
+ [emp_indVF, a_indVF] = find(vfn > WFB); % find non-zero indices
 
-   
+
+ 
+% calculate lambda:
+
+lambda=(WFB./vfn).^(1/1-sigma)-1;
+
+ Welfaregain=sum(sum(Mu.*lambda));
 
  
