@@ -129,16 +129,10 @@ legend({'Equality line','Lorenz Curve'},'Location','southeast')
 
 %extra credit 
 
-% calculate expected util
-ce=PI(1,1)/PI(1,2);
-cu=PI(2,1)/PI(2,2);
-retE = (ce .^ (1-sigma)) ./ (1 - sigma);
-retU = (cu .^ (1-sigma)) ./ (1 - sigma);
-WE=(retE*(1/(1-beta)));
-WU=(retU*(1/(1-beta)));
+% calculate exp
 % need to find value function value for each chosen asset:
- [emp_indVFE, a_indVFE] = find(vfn(1,:) > WE); % find non-zero indices
- [emp_indVFU, a_indVFU] = find(vfn(2,:) > WU); % find non-zero indices
+ [emp_indVFE, a_indVFE] = find(vfn(1,:) > -58.62103818); % find non-zero indices
+ [emp_indVFU, a_indVFU] = find(vfn(2,:) > -333.3333333); % find non-zero indices
  
 value_fn_distrubtion=Mu.*vfn;
 
