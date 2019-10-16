@@ -7,7 +7,7 @@ sigma = 1.5; % coefficient of risk aversion
 b = 0.5; % replacement ratio (unemployment benefits)
 y_s = [1, b]; % endowment in employment states
 PI = [.97 .03; .5 .5]; % transition matrix
-
+PI_t = PI ^ 100;
 
 % ASSET VECTOR
 a_lo = -2; %lower bound of grid points
@@ -109,11 +109,15 @@ end
  income_U = a+b;
  %multiply by distribution
   Income = [income_E income_U].*Mu(:)';
+  %summing total income and sorting income
   TotalIncome=sum(Income(:));
  [Income sort] = sort(Income);
+ %get the percentage 
  perc = Income/TotalIncome;
+ %population percentage given by the stationary distribution
  pop = Mu(:)';
  pop = pop(sort);
+ %cumulative sum population percentage and percentage of income
  for i = 2:length(Income)
      perc(i) = perc(i)+perc(i-1);
      pop(i) = pop(i)+pop(i-1);
@@ -128,18 +132,15 @@ legend({'Equality line','Lorenz Curve'},'Location','southeast')
 
 
 %extra credit 
-
 % calculate expected util
-ce=PI(1,1)*1+ PI(1,2)*b;
-cu=PI(2,1)*1+ PI(2,2)*b;
-retE = (ce .^ (1-sigma)) ./ (1 - sigma);
-retU = (cu .^ (1-sigma)) ./ (1 - sigma);
-WE=(retE*(1/(1-beta)));
-WU=(retU*(1/(1-beta)));
- 
+% in constant consumption 
+c=PI_t(1,1)*1+ PI_t(1,2)*b;
+ret = (c .^ (1-sigma)) ./ (1 - sigma);
+W=(ret*(1/(1-beta)));
+
  %create matrix with WE and WU
- WFB=[WE*ones(1,num_a);
-        WU*ones(1,num_a)];
+ WFB=[W*ones(1,num_a);
+        W*ones(1,num_a)];
     
 % need to find value function value for each chosen asset:
 
@@ -153,7 +154,7 @@ vf_chosen=vfn(pol_indx);
       for ii = 1:length(emp_indVF)
          distInc(ii) = Mu(emp_indVF(ii), a_indVF(ii));
       end   
-    %percentage of population taht are done better
+    %percentage of population that are better off 
     sum(distInc(:))
  
 % calculate lambda:
@@ -161,5 +162,6 @@ vf_chosen=vfn(pol_indx);
 lambda=(WFB./vf_chosen).^(1/1-sigma)-1;
 
  Welfaregain=sum(sum(Mu.*lambda));
+ 
 
  
